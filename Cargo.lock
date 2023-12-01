@@ -6395,6 +6395,7 @@ dependencies = [
  "jsonrpsee 0.16.3",
  "log",
  "madara-runtime",
+ "madara-utils",
  "mc-commitment-state-diff",
  "mc-data-availability",
  "mc-db",
@@ -6488,6 +6489,16 @@ dependencies = [
  "starknet-ff",
  "starknet_api",
  "substrate-wasm-builder",
+]
+
+[[package]]
+name = "madara-utils"
+version = "0.5.0"
+dependencies = [
+ "log",
+ "pallet-starknet",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
@@ -6645,6 +6656,7 @@ dependencies = [
  "hex",
  "jsonrpsee 0.16.3",
  "log",
+ "madara-utils",
  "mc-db",
  "mc-rpc-core",
  "mc-storage",
