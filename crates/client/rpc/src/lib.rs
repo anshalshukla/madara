@@ -15,14 +15,14 @@ use errors::StarknetRpcApiError;
 use jsonrpsee::core::{async_trait, RpcResult};
 use jsonrpsee::types::error::CallError;
 use log::error;
-use madara_utils::GenesisProvider;
 use mc_db::Backend as MadaraBackend;
 pub use mc_rpc_core::utils::*;
 pub use mc_rpc_core::{
-    Felt, MadaraRpcApiServer, PredeployedAccount, PredeployedAccountsList, StarknetReadRpcApiServer,
+    Felt, MadaraRpcApiServer, PredeployedAccountWithBalance, PredeployedAccountsList, StarknetReadRpcApiServer,
     StarknetWriteRpcApiServer,
 };
 use mc_storage::OverrideHandle;
+use mc_utils::GenesisProvider;
 use mp_felt::{Felt252Wrapper, Felt252WrapperError};
 use mp_hashers::HasherT;
 use mp_transactions::compute_hash::ComputeTransactionHash;
@@ -202,16 +202,16 @@ where
     H: HasherT + Send + Sync + 'static,
 {
     fn predeployed_accounts(&self) -> RpcResult<PredeployedAccountsList> {
-        let genesis_data = self.genesis_provider.load_genesis_data().unwrap();
+        let genesis_data = self.genesis_provider.load_genesis_data()?;
         let block_id = BlockId::Tag(BlockTag::Latest);
         let fee_token_address: FieldElement = genesis_data.fee_token_address.0;
 
         Ok(genesis_data
             .predeployed_accounts
             .into_iter()
-            .map(|(address, hash, name, private_key)| {
-                let contract_address = Felt252Wrapper(address.0).into();
-                let class_hash = Felt252Wrapper(hash.0).into();
+            .map(|account| {
+                let contract_address: FieldElement = Felt252Wrapper(account.contract_address).into();
+                let class_hash: FieldElement = Felt252Wrapper(account.class_hash).into();
                 let balance_string = &self
                     .call(
                         FunctionCall {
@@ -225,7 +225,7 @@ where
                     .expect("FunctionCall attributes should be correct.")[0];
                 let balance =
                     Felt252Wrapper::from_hex_be(balance_string).expect("`balanceOf` should return a Felt").into();
-                PredeployedAccount { contract_address, class_hash, name, private_key, balance }
+                PredeployedAccountWithBalance { account, balance }
             })
             .collect::<Vec<_>>())
     }

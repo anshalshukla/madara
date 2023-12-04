@@ -14,6 +14,7 @@ use serde_with::serde_as;
 
 pub mod utils;
 
+use pallet_starknet::genesis_loader::PredeployedAccount;
 use starknet_core::serde::unsigned_field_element::UfeHex;
 use starknet_core::types::{
     BlockHashAndNumber, BlockId, BroadcastedDeclareTransaction, BroadcastedDeployAccountTransaction,
@@ -28,19 +29,16 @@ use starknet_core::types::{
 pub struct Felt(#[serde_as(as = "UfeHex")] pub FieldElement);
 
 #[derive(Serialize, Deserialize)]
-pub struct PredeployedAccount {
-    pub contract_address: FieldElement,
-    pub class_hash: FieldElement,
-    pub name: String,
-    pub private_key: Option<Vec<u8>>,
+pub struct PredeployedAccountWithBalance {
+    pub account: PredeployedAccount,
     pub balance: FieldElement,
 }
 
-pub type PredeployedAccountsList = Vec<PredeployedAccount>;
+pub type PredeployedAccountsList = Vec<PredeployedAccountWithBalance>;
 
 /// Madara rpc interface for additional features.
 #[rpc(server, namespace = "madara")]
-pub trait MadaraRpcApi: StarknetWriteRpcApi + StarknetReadRpcApi {
+pub trait MadaraRpcApi: StarknetReadRpcApi {
     #[method(name = "predeployedAccounts")]
     fn predeployed_accounts(&self) -> RpcResult<PredeployedAccountsList>;
 }

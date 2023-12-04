@@ -1,8 +1,8 @@
 use std::sync::Arc;
 
-use madara_utils::GenesisProvider;
 use mc_db::Backend;
 use mc_storage::OverrideHandle;
+use mc_utils::GenesisProvider;
 use sc_network_sync::SyncingService;
 use sp_api::BlockT;
 use sp_runtime::traits::Header as HeaderT;
@@ -19,7 +19,7 @@ pub struct StarknetDeps<C, G: GenesisProvider, B: BlockT> {
     pub sync_service: Arc<SyncingService<B>>,
     /// The starting block for the syncing.
     pub starting_block: <<B>::Header as HeaderT>::Number,
-    /// The genesis state data
+    /// The genesis state data provider
     pub genesis_provider: Arc<G>,
 }
 

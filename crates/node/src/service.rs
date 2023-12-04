@@ -11,7 +11,6 @@ use futures::future::BoxFuture;
 use futures::prelude::*;
 use madara_runtime::opaque::Block;
 use madara_runtime::{self, Hash, RuntimeApi, SealingMode, StarknetHasher};
-use madara_utils::OnDiskGenesisConfig;
 use mc_commitment_state_diff::{log_commitment_state_diff, CommitmentStateDiffWorker};
 use mc_data_availability::avail::config::AvailConfig;
 use mc_data_availability::avail::AvailClient;
@@ -22,6 +21,7 @@ use mc_data_availability::ethereum::EthereumClient;
 use mc_data_availability::{DaClient, DaLayer, DataAvailabilityWorker};
 use mc_mapping_sync::MappingSyncWorker;
 use mc_storage::overrides_handle;
+use mc_utils::OnDiskGenesisConfig;
 use mp_sequencer_address::{
     InherentDataProvider as SeqAddrInherentDataProvider, DEFAULT_SEQUENCER_ADDRESS, SEQ_ADDR_STORAGE_KEY,
 };
@@ -352,8 +352,8 @@ pub fn new_full(
     };
 
     let overrides = overrides_handle(client.clone());
-    let config_dir: Box<PathBuf> = Box::new(config.data_path.clone());
-    let genesis_data = OnDiskGenesisConfig(config_dir.as_path().into());
+    let config_dir: PathBuf = config.data_path.clone();
+    let genesis_data = OnDiskGenesisConfig(config_dir);
     let starknet_rpc_params = StarknetDeps {
         client: client.clone(),
         madara_backend: madara_backend.clone(),

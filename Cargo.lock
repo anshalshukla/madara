@@ -6395,13 +6395,13 @@ dependencies = [
  "jsonrpsee 0.16.3",
  "log",
  "madara-runtime",
- "madara-utils",
  "mc-commitment-state-diff",
  "mc-data-availability",
  "mc-db",
  "mc-mapping-sync",
  "mc-rpc",
  "mc-storage",
+ "mc-utils",
  "md5",
  "mp-block",
  "mp-digest-log",
@@ -6489,16 +6489,6 @@ dependencies = [
  "starknet-ff",
  "starknet_api",
  "substrate-wasm-builder",
-]
-
-[[package]]
-name = "madara-utils"
-version = "0.5.0"
-dependencies = [
- "log",
- "pallet-starknet",
- "serde",
- "serde_json",
 ]
 
 [[package]]
@@ -6656,10 +6646,10 @@ dependencies = [
  "hex",
  "jsonrpsee 0.16.3",
  "log",
- "madara-utils",
  "mc-db",
  "mc-rpc-core",
  "mc-storage",
+ "mc-utils",
  "mp-block",
  "mp-felt",
  "mp-hashers",
@@ -6704,6 +6694,7 @@ dependencies = [
  "mp-block",
  "mp-digest-log",
  "num-bigint",
+ "pallet-starknet",
  "serde",
  "serde_json",
  "serde_with",
@@ -6737,6 +6728,19 @@ dependencies = [
  "sp-storage 13.0.0 (git+https://github.com/paritytech/polkadot-sdk?branch=release-polkadot-v1.3.0)",
  "starknet-core",
  "starknet_api",
+]
+
+[[package]]
+name = "mc-utils"
+version = "0.5.0"
+dependencies = [
+ "anyhow",
+ "jsonrpsee 0.16.3",
+ "log",
+ "pallet-starknet",
+ "serde",
+ "serde_json",
+ "thiserror",
 ]
 
 [[package]]

@@ -33,6 +33,7 @@ jsonrpsee = { workspace = true, features = [
 mp-block = { workspace = true }
 mp-digest-log = { workspace = true }
 num-bigint = { workspace = true }
+pallet-starknet = { workspace = true }
 serde = { workspace = true, default-features = true }
 serde_json = { workspace = true }
 serde_with = { workspace = true }
