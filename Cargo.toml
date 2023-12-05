@@ -16,7 +16,7 @@ members = [
   "crates/primitives/storage",
   "crates/primitives/commitments",
   "crates/primitives/chain-id",
-  "crates/client/utils",
+  "crates/client/genesis-data-provider",
   "crates/client/db",
   "crates/client/rpc-core",
   "crates/client/rpc",
@@ -43,7 +43,7 @@ default-members = [
   "crates/primitives/storage",
   "crates/primitives/commitments",
   "crates/primitives/chain-id",
-  "crates/client/utils",
+  "crates/client/genesis-data-provider",
   "crates/client/db",
   "crates/client/rpc-core",
   "crates/client/rpc",
@@ -166,7 +166,7 @@ mp-commitments = { path = "crates/primitives/commitments", default-features = fa
 mp-chain-id = { path = "crates/primitives/chain-id", default-features = false }
 
 # Madara client
-mc-utils = { path = "crates/client/utils" }
+mc-genesis-data-provider = { path = "crates/client/genesis-data-provider" }
 mc-mapping-sync = { path = "crates/client/mapping-sync" }
 mc-db = { path = "crates/client/db" }
 mc-storage = { path = "crates/client/storage" }

@@ -6398,10 +6398,10 @@ dependencies = [
  "mc-commitment-state-diff",
  "mc-data-availability",
  "mc-db",
+ "mc-genesis-data-provider",
  "mc-mapping-sync",
  "mc-rpc",
  "mc-storage",
- "mc-utils",
  "md5",
  "mp-block",
  "mp-digest-log",
@@ -6614,6 +6614,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "mc-genesis-data-provider"
+version = "0.5.0"
+dependencies = [
+ "anyhow",
+ "jsonrpsee 0.16.3",
+ "log",
+ "pallet-starknet",
+ "serde",
+ "serde_json",
+ "thiserror",
+]
+
+[[package]]
 name = "mc-mapping-sync"
 version = "0.5.0"
 dependencies = [
@@ -6647,9 +6660,9 @@ dependencies = [
  "jsonrpsee 0.16.3",
  "log",
  "mc-db",
+ "mc-genesis-data-provider",
  "mc-rpc-core",
  "mc-storage",
- "mc-utils",
  "mp-block",
  "mp-felt",
  "mp-hashers",
@@ -6728,19 +6741,6 @@ dependencies = [
  "sp-storage 13.0.0 (git+https://github.com/paritytech/polkadot-sdk?branch=release-polkadot-v1.3.0)",
  "starknet-core",
  "starknet_api",
-]
-
-[[package]]
-name = "mc-utils"
-version = "0.5.0"
-dependencies = [
- "anyhow",
- "jsonrpsee 0.16.3",
- "log",
- "pallet-starknet",
- "serde",
- "serde_json",
- "thiserror",
 ]
 
 [[package]]

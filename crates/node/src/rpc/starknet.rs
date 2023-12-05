@@ -1,8 +1,8 @@
 use std::sync::Arc;
 
 use mc_db::Backend;
+use mc_genesis_data_provider::GenesisProvider;
 use mc_storage::OverrideHandle;
-use mc_utils::GenesisProvider;
 use sc_network_sync::SyncingService;
 use sp_api::BlockT;
 use sp_runtime::traits::Header as HeaderT;
