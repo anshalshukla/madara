@@ -6619,6 +6619,7 @@ dependencies = [
  "anyhow",
  "jsonrpsee 0.16.3",
  "log",
+ "mp-genesis-config",
  "pallet-starknet",
  "serde",
  "serde_json",
