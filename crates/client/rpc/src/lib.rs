@@ -219,15 +219,16 @@ where
             .predeployed_accounts
             .into_iter()
             .map(|account| {
-                let contract_address: FieldElement = Felt252Wrapper(account.contract_address).into();
+                let address: FieldElement = Felt252Wrapper(account.address).into();
                 let class_hash: FieldElement = Felt252Wrapper(account.class_hash).into();
+				// let public_key: FieldElement = Felt252Wrapper(account.public_key).into();
                 let balance_string = &self
                     .call(
                         FunctionCall {
                             contract_address: fee_token_address,
                             entry_point_selector: get_selector_from_name("balanceOf")
                                 .expect("the provided method name should be a valid ASCII string."),
-                            calldata: vec![contract_address],
+                            calldata: vec![address],
                         },
                         block_id,
                     )

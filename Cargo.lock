@@ -7020,6 +7020,7 @@ version = "0.5.0"
 dependencies = [
  "blockifier",
  "derive_more",
+ "hex",
  "mp-felt",
  "serde",
  "serde_json",
