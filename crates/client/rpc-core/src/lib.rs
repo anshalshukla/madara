@@ -35,7 +35,7 @@ pub struct PredeployedAccountWithBalance {
 }
 
 /// Madara rpc interface for additional features.
-#[rpc(server, namespace = "katana")]
+#[rpc(server, namespace = "madara")]
 pub trait MadaraRpcApi: StarknetReadRpcApi {
     #[method(name = "predeployedAccounts")]
     fn predeployed_accounts(&self) -> RpcResult<Vec<PredeployedAccountWithBalance>>;

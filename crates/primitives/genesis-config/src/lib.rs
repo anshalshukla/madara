@@ -78,7 +78,7 @@ pub enum ContractClass {
 /// A struct containing predeployed accounts info.
 #[derive(Serialize, Deserialize)]
 pub struct PredeployedAccount {
-    pub address: FieldElement,
+    pub contract_address: FieldElement,
     pub class_hash: FieldElement,
     pub name: String,
 	#[serde(serialize_with = "buffer_to_hex")]
