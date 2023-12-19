@@ -85,6 +85,10 @@ pub trait StarknetReadRpcApi {
     #[method(name = "getBlockTransactionCount")]
     fn get_block_transaction_count(&self, block_id: BlockId) -> RpcResult<u128>;
 
+	/// Gets the Transaction Status, Including Mempool Status and Execution Details
+	#[method(name = "getTransactionStatus")]
+	fn get_transaction_status(&self, transaction_hash: FieldElement) -> RpcResult<TransactionStatus>;
+
     /// Get the value of the storage at the given address and key, at the given block id
     #[method(name = "getStorageAt")]
     fn get_storage_at(&self, contract_address: FieldElement, key: FieldElement, block_id: BlockId) -> RpcResult<Felt>;

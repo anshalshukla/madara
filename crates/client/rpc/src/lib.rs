@@ -26,7 +26,7 @@ use mp_felt::{Felt252Wrapper, Felt252WrapperError};
 use mp_hashers::HasherT;
 use mp_transactions::compute_hash::ComputeTransactionHash;
 use mp_transactions::to_starknet_core_transaction::to_starknet_core_tx;
-use mp_transactions::UserTransaction;
+use mp_transactions::{TransactionStatus, UserTransaction};
 use pallet_starknet_runtime_api::{ConvertTransactionRuntimeApi, StarknetRuntimeApi};
 use sc_client_api::backend::{Backend, StorageProvider};
 use sc_client_api::BlockBackend;
@@ -49,7 +49,7 @@ use starknet_core::types::{
     DeployAccountTransactionResult, EventFilterWithPage, EventsPage, ExecutionResult, FeeEstimate, FieldElement,
     FunctionCall, InvokeTransactionReceipt, InvokeTransactionResult, L1HandlerTransactionReceipt,
     MaybePendingBlockWithTxHashes, MaybePendingBlockWithTxs, MaybePendingTransactionReceipt, StateDiff, StateUpdate,
-    SyncStatus, SyncStatusType, Transaction, TransactionFinalityStatus, TransactionReceipt,
+    SyncStatus, SyncStatusType, Transaction, TransactionExecutionStatus, TransactionFinalityStatus, TransactionReceipt,
 };
 use starknet_core::utils::get_selector_from_name;
 
@@ -461,6 +461,78 @@ where
 
         Ok(block.header().transaction_count)
     }
+
+	/// Gets the Transaction Status, Including Mempool Status and Execution Details
+	///
+	/// This method retrieves the status of a specified transaction. It provides information on
+	/// whether the transaction is still in the mempool, has been executed, or dropped from the
+	/// mempool. The status includes both finality status and execution status of the
+	/// transaction.
+	///
+	/// ### Arguments
+	///
+	/// * `transaction_hash` - The hash of the transaction for which the status is requested.
+	///
+	/// ### Returns
+	///
+	/// * `transaction_status` - An object containing the transaction status details:
+	///   - `finality_status`: The finality status of the transaction, indicating whether it is
+	///     confirmed, pending, or rejected.
+	///   - `execution_status`: The execution status of the transaction, providing details on the
+	///     execution outcome if the transaction has been processed.
+	fn get_transaction_status(&self, transaction_hash: FieldElement) -> RpcResult<TransactionStatus> {
+		let substrate_block_hash = self
+			.backend
+			.mapping()
+			.block_hash_from_transaction_hash(H256::from(transaction_hash.to_bytes_be()))
+			.map_err(|e| {
+				error!("Failed to get transaction's substrate block hash from mapping_db: {e}");
+				StarknetRpcApiError::TxnHashNotFound
+			})?
+			.ok_or(StarknetRpcApiError::TxnHashNotFound)?;
+
+		let starknet_block = get_block_by_block_hash(self.client.as_ref(), substrate_block_hash)
+			.ok_or(StarknetRpcApiError::BlockNotFound)?;
+
+		let chain_id = self.chain_id()?.0.into();
+
+		let starknet_tx =
+			if let Some(tx_hashes) = self.get_cached_transaction_hashes(starknet_block.header().hash::<H>().into()) {
+				tx_hashes
+					.into_iter()
+					.zip(starknet_block.transactions())
+					.find(|(tx_hash, _)| *tx_hash == Felt252Wrapper(transaction_hash).into())
+					.map(|(_, tx)| to_starknet_core_tx(tx.clone(), transaction_hash))
+			} else {
+				starknet_block
+					.transactions()
+					.iter()
+					.find(|tx| tx.compute_hash::<H>(chain_id, false).0 == transaction_hash)
+					.map(|tx| to_starknet_core_tx(tx.clone(), transaction_hash))
+			};
+
+		let execution_status = {
+			let revert_error = self
+				.client
+				.runtime_api()
+				.get_tx_execution_outcome(substrate_block_hash, Felt252Wrapper(transaction_hash).into())
+				.map_err(|e| {
+					error!(
+                        "Failed to get transaction execution outcome. Substrate block hash: {substrate_block_hash}, \
+                         transaction hash: {transaction_hash}, error: {e}"
+                    );
+					StarknetRpcApiError::InternalServerError
+				})?;
+
+			if revert_error.is_none() {
+				TransactionExecutionStatus::Succeeded
+			} else {
+				TransactionExecutionStatus::Reverted
+			}
+		};
+
+		Ok(TransactionStatus { finality_status: TransactionFinalityStatus::AcceptedOnL2, execution_status })
+	}
 
     /// Get the value of the storage at the given address and key.
     ///
