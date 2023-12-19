@@ -6706,6 +6706,7 @@ dependencies = [
  "jsonrpsee 0.16.3",
  "mp-block",
  "mp-digest-log",
+ "mp-transactions",
  "num-bigint",
  "pallet-starknet",
  "serde",

@@ -14,6 +14,7 @@ use serde_with::serde_as;
 
 pub mod utils;
 
+use mp_transactions::TransactionStatus;
 use pallet_starknet::genesis_loader::PredeployedAccount;
 use starknet_core::serde::unsigned_field_element::UfeHex;
 use starknet_core::types::{
