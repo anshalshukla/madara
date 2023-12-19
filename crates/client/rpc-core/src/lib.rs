@@ -14,6 +14,7 @@ use serde_with::serde_as;
 
 pub mod utils;
 
+use mp_simulations::{SimulatedTransaction, SimulationFlag};
 use mp_transactions::TransactionStatus;
 use pallet_starknet::genesis_loader::PredeployedAccount;
 use starknet_core::serde::unsigned_field_element::UfeHex;
@@ -67,7 +68,7 @@ pub trait StarknetWriteRpcApi {
     ) -> RpcResult<DeclareTransactionResult>;
 }
 
-/// Starknet rpc interface.
+/// Starknet read rpc interface.
 #[rpc(server, namespace = "starknet")]
 pub trait StarknetReadRpcApi {
     /// Get the Version of the StarkNet JSON-RPC Specification Being Used
@@ -86,9 +87,9 @@ pub trait StarknetReadRpcApi {
     #[method(name = "getBlockTransactionCount")]
     fn get_block_transaction_count(&self, block_id: BlockId) -> RpcResult<u128>;
 
-	/// Gets the Transaction Status, Including Mempool Status and Execution Details
-	#[method(name = "getTransactionStatus")]
-	fn get_transaction_status(&self, transaction_hash: FieldElement) -> RpcResult<TransactionStatus>;
+    /// Gets the Transaction Status, Including Mempool Status and Execution Details
+    #[method(name = "getTransactionStatus")]
+    fn get_transaction_status(&self, transaction_hash: FieldElement) -> RpcResult<TransactionStatus>;
 
     /// Get the value of the storage at the given address and key, at the given block id
     #[method(name = "getStorageAt")]
@@ -147,10 +148,6 @@ pub trait StarknetReadRpcApi {
     #[method(name = "getStateUpdate")]
     fn get_state_update(&self, block_id: BlockId) -> RpcResult<StateUpdate>;
 
-    /// Returns the transactions in the transaction pool, recognized by this sequencer
-    #[method(name = "pendingTransactions")]
-    async fn pending_transactions(&self) -> RpcResult<Vec<Transaction>>;
-
     /// Returns all events matching the given filter
     #[method(name = "getEvents")]
     async fn get_events(&self, filter: EventFilterWithPage) -> RpcResult<EventsPage>;
@@ -165,4 +162,17 @@ pub trait StarknetReadRpcApi {
         &self,
         transaction_hash: FieldElement,
     ) -> RpcResult<MaybePendingTransactionReceipt>;
+}
+
+/// Starknet trace rpc interface.
+#[rpc(server, namespace = "starknet")]
+pub trait StarknetTraceRpcApi {
+    /// Returns the execution trace of a transaction by simulating it in the runtime.
+    #[method(name = "simulateTransactions")]
+    async fn simulate_transactions(
+        &self,
+        block_id: BlockId,
+        transactions: Vec<BroadcastedTransaction>,
+        simulation_flags: Vec<SimulationFlag>,
+    ) -> RpcResult<Vec<SimulatedTransaction>>;
 }

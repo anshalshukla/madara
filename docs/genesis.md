@@ -43,6 +43,26 @@ The below defines all hardcoded values set in the geneses:
 | 0x0372ee6669dc86563007245ed7343d5180b96221ce28f44408cff2898038dbd4 | ERC20 class hash                               |
 | 0x077cc28ed3c661419fda16bf120fb81f1f8f28617f5543b05a86d63b0926bbf4 | ERC721 class hash                              |
 | 0x04569ffd48c2a3d455437c16dc843801fb896b1af845bc8bc7ba83ebc4358b7f | Universal deployer class hash                  |
+| 0x01a736d6ed154502257f02b1ccdf4d9d1089f80811cd6acad48e6b6a9d1f2003 | Argent Cairo 1 Account                         |
+
+<!-- markdownlint-disable MD013 -->
+
+### Predeployed accounts node genesis
+
+<!-- markdownlint-disable MD013 -->
+
+| Contract address | Class hash                                                         | Name                            | Optional private key |
+| :--------------- | :----------------------------------------------------------------- | :------------------------------ | :------------------- |
+| 0x1              | 0x0279d77db761fba82e0054125a6fdb5f6baa6286fa3fb73450cc44d193c2d37f | No Validation Account           | null                 |
+| 0x2              | 0x06f0d6f6ae72e1a507ff4b65181291642889742dbf8f1a53e9ec1c595d01ba7d | Argent Account                  | `pk`                 |
+| 0x3              | 0x006280083f8c2a2db9f737320d5e3029b380e0e820fe24b8d312a6a34fdba0cd | Openzeppelin Account            | `pk`                 |
+| 0x4              | 0x35ccefcf9d5656da623468e27e682271cd327af196785df99e7fee1436b6276  | No Validation Account (cairo 1) | null                 |
+
+where `pk` is the following vector of `u8`:
+
+```rust
+[48,120,48,48,99,49,99,102,49,52,57,48,100,101,49,51,53,50,56,54,53,51,48,49,98,98,56,55,48,53,49,52,51,102,51,101,102,57,51,56,102,57,55,102,100,102,56,57,50,102,49,48,57,48,100,99,98,53,97,99,55,98,99,100,49,100]
+```
 
 <!-- markdownlint-disable MD013 -->
 
