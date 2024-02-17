@@ -121,6 +121,8 @@ macro_rules! log {
 
 #[frame_support::pallet]
 pub mod pallet {
+    use blockifier::transaction::errors::TransactionExecutionError::{EntryPointExecutionError, ExecutionError};
+
     use super::*;
 
     #[pallet::pallet]
@@ -693,7 +695,13 @@ pub mod pallet {
                     &RuntimeExecutionConfigBuilder::new::<T>().build(),
                 )
                 .map_err(|e| {
-                    log::error!("Failed to consume l1 message: {}", e);
+                    match e {
+                        ExecutionError(err) => {
+                            log::info!("Anshal - {}", err)
+                        }
+                        _ => log::info!("Anshal - Not execution error"),
+                    }
+                    // log::error!("Failed to consume l1 message: {}", e);
                     Error::<T>::TransactionExecutionFailed
                 })?;
 

@@ -123,6 +123,7 @@ where
 
                     match declare_tx {
                         DeclareTransaction::V0(_) | DeclareTransaction::V1(_) => {
+                            log::info!("Anshal - declaring");
                             let contract_class = self
                                 .overrides
                                 .for_block_hash(self.client.as_ref(), substrate_block_hash)
